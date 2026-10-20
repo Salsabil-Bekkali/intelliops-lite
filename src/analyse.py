@@ -21,7 +21,7 @@ def chercher_procedures(evt, base):
 
 
 def classifier(evt, nb_erreurs=0):
-    if nb_erreurs > 100:
+    if nb_erreurs >= 3:
         return "CRITICAL"
     return evt.severity
 
