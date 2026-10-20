@@ -65,7 +65,10 @@ class TestExtraction(unittest.TestCase):
     def test_pipeline_cle_manquante(self):
         with self.assertRaises(ValueError):
             normaliser_pipeline({"job": "x"}, 1)
-
+        
+    def test_bearer(self):
+        self.assertEqual(masquer_secrets("Authorization: Bearer eyJ.abc-1"),
+                         "Authorization: Bearer [SECRET]")
 
 if __name__ == "__main__":
     unittest.main()
