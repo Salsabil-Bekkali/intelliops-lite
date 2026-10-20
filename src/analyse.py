@@ -15,8 +15,9 @@ def compter_erreurs(evt, compteur):
     return 0
 
 
-def chercher_procedures(evt: Evenement, base: dict) -> list:
-    raise NotImplementedError
+def chercher_procedures(evt, base):
+    msg = evt.message.lower()
+    return [proc for mot, proc in base.items() if mot.lower() in msg]
 
 
 def classifier(evt: Evenement, nb_erreurs: int = 0) -> str:
