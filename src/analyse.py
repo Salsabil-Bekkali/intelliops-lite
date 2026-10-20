@@ -20,8 +20,10 @@ def chercher_procedures(evt, base):
     return [proc for mot, proc in base.items() if mot.lower() in msg]
 
 
-def classifier(evt: Evenement, nb_erreurs: int = 0) -> str:
-    raise NotImplementedError
+def classifier(evt, nb_erreurs=0):
+    if nb_erreurs >= 3:
+        return "CRITICAL"
+    return evt.severity
 
 
 def analyser(evt: Evenement, base: dict, nb_erreurs: int = 0) -> Analyse:
