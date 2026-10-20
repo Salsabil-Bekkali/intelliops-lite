@@ -7,6 +7,8 @@ _SECRET_RE = re.compile(
     re.IGNORECASE,
 )
 
+_BEARER_RE = re.compile(r"\b(Bearer\s+)([^\s&,;]+)", re.IGNORECASE)
+
 _SEVERITES_LOG = {
     "CRITICAL": "CRITICAL",
     "FATAL": "CRITICAL",
@@ -17,8 +19,8 @@ _SEVERITES_LOG = {
 
 
 def masquer_secrets(texte: str) -> str:
-    return _SECRET_RE.sub(r"\1\2[SECRET]", texte)
-
+    texte = _SECRET_RE.sub(r"\1\2[SECRET]", texte)
+    return _BEARER_RE.sub(r"\1[SECRET]", texte)
 
 def _id(numero: int) -> str:
     return f"EVT-{numero:05d}"
@@ -79,4 +81,4 @@ def normaliser_pipeline(rapport: dict, numero: int,
         event_type="PIPELINE_FAILURE" if echec else "PIPELINE_OK",
         severity="HIGH" if echec else "LOW",
         message=f"Pipeline {rapport['job']} : {rapport['status']}",
-    )
+    ) 
