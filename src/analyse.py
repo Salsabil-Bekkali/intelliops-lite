@@ -8,8 +8,11 @@ def est_doublon(evt, vus):
     vus.add(cle)
     return False
 
-def compter_erreurs(evt: Evenement, compteur: dict) -> int:
-    raise NotImplementedError
+def compter_erreurs(evt, compteur):
+    if evt.event_type == "LOG" and evt.severity in ("HIGH", "CRITICAL"):
+        compteur[evt.component] = compteur.get(evt.component, 0) + 1
+        return compteur[evt.component]
+    return 0
 
 
 def chercher_procedures(evt: Evenement, base: dict) -> list:
