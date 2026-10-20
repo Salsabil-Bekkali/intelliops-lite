@@ -26,5 +26,20 @@ def classifier(evt, nb_erreurs=0):
     return evt.severity
 
 
-def analyser(evt: Evenement, base: dict, nb_erreurs: int = 0) -> Analyse:
-    raise NotImplementedError
+def analyser(evt, base, nb_erreurs=0):
+    level = classifier(evt, nb_erreurs)
+    procs = chercher_procedures(evt, base)
+    explanation = " | ".join(procs) if procs else "Cause inconnue : analyse manuelle requise"
+
+    if evt.event_type == "VULNERABILITY":
+        action = f"Mettre a jour la dependance {evt.component}"
+    elif evt.event_type == "PIPELINE_FAILURE":
+        action = f"Relancer le pipeline {evt.component}"
+    elif level == "CRITICAL":
+        action = f"Redemarrer le service {evt.component}"
+    else:
+        action = "Surveiller"
+
+    sensitive = action.startswith("Redemarrer")
+    evt.status = "ANALYZED"
+    return Analyse(evt.id, level, explanation, action, sensitive, [evt.source])
